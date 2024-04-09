@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
+ *
  * @TableName sys_demand_record
  */
 @TableName(value ="sys_demand_record")
@@ -37,19 +37,14 @@ public class SysDemandRecord implements Serializable {
     private String workstation;
 
     /**
-     * 需求量
+     * 提交量
      */
-    private Integer demandNumber;
+    private Integer completeNumber;
 
     /**
      * 创建时间
      */
     private Date createTime;
-
-    /**
-     * 状态  submit已提交  finish完成 
-     */
-    private String status;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -70,9 +65,8 @@ public class SysDemandRecord implements Serializable {
             && (this.getProduct() == null ? other.getProduct() == null : this.getProduct().equals(other.getProduct()))
             && (this.getEmployee() == null ? other.getEmployee() == null : this.getEmployee().equals(other.getEmployee()))
             && (this.getWorkstation() == null ? other.getWorkstation() == null : this.getWorkstation().equals(other.getWorkstation()))
-            && (this.getDemandNumber() == null ? other.getDemandNumber() == null : this.getDemandNumber().equals(other.getDemandNumber()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()));
+            && (this.getCompleteNumber() == null ? other.getCompleteNumber() == null : this.getCompleteNumber().equals(other.getCompleteNumber()))
+            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()));
     }
 
     @Override
@@ -83,9 +77,8 @@ public class SysDemandRecord implements Serializable {
         result = prime * result + ((getProduct() == null) ? 0 : getProduct().hashCode());
         result = prime * result + ((getEmployee() == null) ? 0 : getEmployee().hashCode());
         result = prime * result + ((getWorkstation() == null) ? 0 : getWorkstation().hashCode());
-        result = prime * result + ((getDemandNumber() == null) ? 0 : getDemandNumber().hashCode());
+        result = prime * result + ((getCompleteNumber() == null) ? 0 : getCompleteNumber().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
-        result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         return result;
     }
 
@@ -99,9 +92,8 @@ public class SysDemandRecord implements Serializable {
         sb.append(", product=").append(product);
         sb.append(", employee=").append(employee);
         sb.append(", workstation=").append(workstation);
-        sb.append(", demandNumber=").append(demandNumber);
+        sb.append(", completeNumber=").append(completeNumber);
         sb.append(", createTime=").append(createTime);
-        sb.append(", status=").append(status);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

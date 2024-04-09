@@ -1,9 +1,11 @@
 package com.example.monitor.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.monitor.domain.SysDemandRecord;
-import com.example.monitor.service.SysDemandRecordService;
 import com.example.monitor.mapper.SysDemandRecordMapper;
+import com.example.monitor.service.SysDemandRecordService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +16,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class SysDemandRecordServiceImpl extends ServiceImpl<SysDemandRecordMapper, SysDemandRecord>
     implements SysDemandRecordService {
+
+
+    @Override
+    public Page<SysDemandRecord> queryRecord(Page<SysDemandRecord> page, SysDemandRecord sysDemandRecord) {
+        LambdaQueryWrapper<SysDemandRecord> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(SysDemandRecord::getCreateTime);
+        return baseMapper.selectPage(page, queryWrapper);
+    }
 
     @Override
     public void saveOrUpdateRecord(SysDemandRecord sysDemandRecord) {

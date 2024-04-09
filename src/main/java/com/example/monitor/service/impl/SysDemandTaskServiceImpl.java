@@ -6,13 +6,15 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.monitor.constant.MonitorConstants;
+import com.example.monitor.domain.SysDemandRecord;
 import com.example.monitor.domain.SysDemandTask;
 import com.example.monitor.mapper.SysDemandTaskMapper;
+import com.example.monitor.service.SysDemandRecordService;
 import com.example.monitor.service.SysDemandTaskService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -21,8 +23,11 @@ import java.util.UUID;
 * @createDate 2024-04-01 15:57:01
 */
 @Service
+@AllArgsConstructor
 public class SysDemandTaskServiceImpl extends ServiceImpl<SysDemandTaskMapper, SysDemandTask>
     implements SysDemandTaskService{
+
+    private final SysDemandRecordService recordService;
 
     @Override
     public boolean saveOrUpdateDemand(SysDemandTask sysDemandTask) {
@@ -33,6 +38,15 @@ public class SysDemandTaskServiceImpl extends ServiceImpl<SysDemandTaskMapper, S
             if (sysDemandTask.getDemandNumber() <= sysDemandTask.getCompletedNumber()) {
                 sysDemandTask.setStatus(MonitorConstants.DEMAND_TASK_STATUS_FINISH);
             }
+            // 保存记录
+            SysDemandRecord sysDemandRecord = new SysDemandRecord();
+            sysDemandRecord.setId(String.valueOf(UUID.randomUUID()));
+            sysDemandRecord.setProduct(sysDemandTask.getProduct());
+//            sysDemandRecord.setEmployee(sysDemandTask.getEmployee());
+            sysDemandRecord.setWorkstation(sysDemandTask.getWorkstation());
+            sysDemandRecord.setCompleteNumber(sysDemandTask.getCompletedNumber());
+            sysDemandRecord.setCreateTime(new Date());
+            recordService.saveOrUpdateRecord(sysDemandRecord);
         } else {
             // 新增
             sysDemandTask.setCreateTime(new Date());

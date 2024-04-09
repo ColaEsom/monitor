@@ -76,5 +76,16 @@ public class SysDemandController {
         return sysDemandTaskService.getInfoByWorkstation(workstation);
     }
 
+    /**
+     * 分页条件查询接口
+     */
+    @GetMapping("/record/page")
+    public Page<SysDemandRecord> queryDemandRecord(@RequestParam(name = "page", defaultValue = "0") int page,
+                                           @RequestParam(name = "size", defaultValue = "10") int size,
+                                           SysDemandRecord sysDemandRecord) {
+        Page<SysDemandRecord> taskPage = new Page<>(page, size);
+        return sysDemandRecordService.queryRecord(taskPage, sysDemandRecord);
+    }
+
 
 }

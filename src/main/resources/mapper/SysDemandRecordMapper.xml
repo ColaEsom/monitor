@@ -9,14 +9,12 @@
             <result property="product" column="product" jdbcType="VARCHAR"/>
             <result property="employee" column="employee" jdbcType="VARCHAR"/>
             <result property="workstation" column="workstation" jdbcType="VARCHAR"/>
-            <result property="demandNumber" column="demand_number" jdbcType="INTEGER"/>
+            <result property="completeNumber" column="complete_number" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="status" column="status" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,product,employee,
-        workstation,demand_number,create_time,
-        status
+        workstation,complete_number,create_time
     </sql>
 </mapper>
