@@ -12,6 +12,7 @@ import com.example.monitor.mapper.SysDemandTaskMapper;
 import com.example.monitor.service.SysDemandRecordService;
 import com.example.monitor.service.SysDemandTaskService;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -29,9 +30,15 @@ public class SysDemandTaskServiceImpl extends ServiceImpl<SysDemandTaskMapper, S
 
     private final SysDemandRecordService recordService;
 
+    @SneakyThrows
     @Override
     public boolean saveOrUpdateDemand(SysDemandTask sysDemandTask) {
         boolean update = StringUtils.isNotBlank(sysDemandTask.getId());
+        // 校验工位是否被分配
+        SysDemandTask alreadyExistTask = getInfoByWorkstation(sysDemandTask.getWorkstation(), sysDemandTask.getId());
+        if (alreadyExistTask != null) {
+            throw new Exception("该工位已被分配任务");
+        }
         if (update) {
             // 修改
             sysDemandTask.setCompletedNumber(sysDemandTask.getCompletedNumber());
@@ -39,14 +46,7 @@ public class SysDemandTaskServiceImpl extends ServiceImpl<SysDemandTaskMapper, S
                 sysDemandTask.setStatus(MonitorConstants.DEMAND_TASK_STATUS_FINISH);
             }
             // 保存记录
-            SysDemandRecord sysDemandRecord = new SysDemandRecord();
-            sysDemandRecord.setId(String.valueOf(UUID.randomUUID()));
-            sysDemandRecord.setProduct(sysDemandTask.getProduct());
-//            sysDemandRecord.setEmployee(sysDemandTask.getEmployee());
-            sysDemandRecord.setWorkstation(sysDemandTask.getWorkstation());
-            sysDemandRecord.setCompleteNumber(sysDemandTask.getCompletedNumber());
-            sysDemandRecord.setCreateTime(new Date());
-            recordService.saveOrUpdateRecord(sysDemandRecord);
+            recordService.saveOrUpdateRecord(encapsulationDataToRecord(sysDemandTask));
         } else {
             // 新增
             sysDemandTask.setCreateTime(new Date());
@@ -54,7 +54,28 @@ public class SysDemandTaskServiceImpl extends ServiceImpl<SysDemandTaskMapper, S
             sysDemandTask.setStatus(MonitorConstants.DEMAND_TASK_STATUS_SUBMIT);
         }
         return this.saveOrUpdate(sysDemandTask);
+    }
 
+    // 校验是否有重复
+    public SysDemandTask getInfoByWorkstation(String workstation, String updateId) {
+        LambdaQueryWrapper<SysDemandTask> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(SysDemandTask::getWorkstation, workstation);
+        queryWrapper.eq(SysDemandTask::getStatus, MonitorConstants.DEMAND_TASK_STATUS_SUBMIT);
+        if (StringUtils.isNotBlank(updateId)) {
+            queryWrapper.ne(SysDemandTask::getId, updateId);
+        }
+        return this.getOne(queryWrapper);
+    }
+
+    // 封装提交记录数据
+    private SysDemandRecord encapsulationDataToRecord(SysDemandTask sysDemandTask) {
+        SysDemandRecord sysDemandRecord = new SysDemandRecord();
+        sysDemandRecord.setId(String.valueOf(UUID.randomUUID()));
+        sysDemandRecord.setProduct(sysDemandTask.getProduct());
+        sysDemandRecord.setWorkstation(sysDemandTask.getWorkstation());
+        sysDemandRecord.setCompleteNumber(sysDemandTask.getCompletedNumber());
+        sysDemandRecord.setCreateTime(new Date());
+        return sysDemandRecord;
     }
 
     @Override

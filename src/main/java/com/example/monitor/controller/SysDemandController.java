@@ -73,7 +73,8 @@ public class SysDemandController {
      */
     @GetMapping("/info/{workstation}")
     public SysDemandTask getInfoByWorkstation(@PathVariable(value = "workstation")  String workstation) {
-        return sysDemandTaskService.getInfoByWorkstation(workstation);
+        SysDemandTask infoByWorkstation = sysDemandTaskService.getInfoByWorkstation(workstation);
+        return infoByWorkstation != null ? infoByWorkstation : new SysDemandTask();
     }
 
     /**
@@ -85,6 +86,15 @@ public class SysDemandController {
                                            SysDemandRecord sysDemandRecord) {
         Page<SysDemandRecord> taskPage = new Page<>(page, size);
         return sysDemandRecordService.queryRecord(taskPage, sysDemandRecord);
+    }
+
+    /**
+     * 删除任务
+     * @param id id
+     */
+    @DeleteMapping("/task/delete/{id}")
+    public Boolean deleteDemandTask(@PathVariable(value = "id") String id) {
+        return sysDemandTaskService.removeById(id);
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.monitor.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -25,8 +26,20 @@ public class SysEmployeeServiceImpl extends ServiceImpl<SysEmployeeMapper, SysEm
 
     @Override
     public Page<SysEmployee> queryUser(Page<SysEmployee> taskPage, SysEmployee sysEmployee) {
-        // 使用MyBatis Plus的分页查询方法，传入Page对象和查询条件
         return baseMapper.selectPage(taskPage, Wrappers.lambdaQuery(sysEmployee));
+    }
+
+    /**
+     * 根据姓名查询用户信息
+     * @param name 名称
+     * @return
+     */
+    @Override
+    public SysEmployee getInfoByName(String name) {
+        if (StringUtils.isNotBlank(name)) {
+            return this.lambdaQuery().eq(SysEmployee::getEmployee, name).last("limit 1").one();
+        }
+        return null;
     }
 }
 

@@ -15,4 +15,7 @@ public interface SysEmployeeService extends IService<SysEmployee> {
     void saveOrUpdateUser(SysEmployee sysEmployee);
 
     Page<SysEmployee> queryUser(Page<SysEmployee> taskPage, SysEmployee sysEmployee);
+
+    // 根据名称查询用户
+    SysEmployee getInfoByName(String name);
 }

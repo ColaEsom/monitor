@@ -52,5 +52,10 @@ public class SysUserController {
         sysEmployeeService.saveOrUpdateUser(sysEmployee);
     }
 
+    // 根据名称查询用户
+    @GetMapping("/info/{name}")
+    public SysEmployee getInfoByEmployee(@PathVariable(value = "name")  String name) {
+        return sysEmployeeService.getInfoByName(name);
+    }
 
 }
