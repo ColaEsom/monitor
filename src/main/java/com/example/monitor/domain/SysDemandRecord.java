@@ -39,11 +39,13 @@ public class SysDemandRecord implements Serializable {
     /**
      * 提交量
      */
+    @TableField("complete_number")
     private Integer completeNumber;
 
     /**
      * 创建时间
      */
+    @TableField("create_time")
     private Date createTime;
 
     @TableField(exist = false)
